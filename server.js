@@ -29,15 +29,19 @@ router.get('/', function(req, res) {
 });
 
 router.route('/manga').get((req, res) => {
-	Manga.find({}, (err, data) => {
-		if (err) res.send(err);
-		res.json(data);
-	})
+	setTimeout(() => {
+		Manga.find({}, (err, data) => {
+			if (err) res.send(err);
+			res.json(data);
+		});
+	}, 2000);	
 });
 
-router.route('/manga/:id').get((req, res) => {
-	Chapter.find({mangaId: req.params.id}, (err, data) => {
+router.route('/manga/:name').get((req, res) => {
+	console.log(req.params)
+	Chapter.find({manga: req.params.name}, { imgs: 0 }, (err, data) => {
 		if (err) res.send(err);
+		console.log(data);
 		data.sort((a, b) => {
 			if (a.created === b.created) {
 				return b.title.localeCompare(a.title);
@@ -47,10 +51,6 @@ router.route('/manga/:id').get((req, res) => {
 		});
 		res.json(data);
 	});
-});
-
-router.route('/manga/:id').post((req, res) => {
-	Manga.findByIdAndUpdate(req.params.id,)
 });
 app.use('/api', router);
 app.listen(port);
