@@ -41,7 +41,6 @@ router.route('/manga/:name').get((req, res) => {
 	console.log(req.params)
 	Chapter.find({manga: req.params.name}, { imgs: 0 }, (err, data) => {
 		if (err) res.send(err);
-		console.log(data);
 		data.sort((a, b) => {
 			if (a.created === b.created) {
 				return b.title.localeCompare(a.title);
@@ -52,6 +51,15 @@ router.route('/manga/:name').get((req, res) => {
 		res.json(data);
 	});
 });
+
+router.route('/manga/:name/:chapterName').get((req, res) => {
+	Chapter.findOne({manga: req.params.name, chapterName: req.params.chapterName}, (err, data) => {
+		if (err) res.send(err);
+		console.log(data);
+		res.json(data);
+	});
+});
+
 app.use('/api', router);
 app.listen(port);
 console.log('Magic happens on port ' + port);
